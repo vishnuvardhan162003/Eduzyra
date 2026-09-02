@@ -38,44 +38,40 @@ const logger = winston.createLogger({
   ),
   defaultMeta: { service: 'eduzyra-api' },
   transports: [
-    // Write all logs with level 'error' and below to error.log
     new winston.transports.File({
       filename: path.join(logsDir, 'error.log'),
       level: 'error',
-      maxsize: 5242880, // 5MB
+      maxsize: 5242880,
       maxFiles: 5,
     }),
-    // Write all logs to combined.log
     new winston.transports.File({
       filename: path.join(logsDir, 'combined.log'),
-      maxsize: 5242880, // 5MB
+      maxsize: 5242880,
       maxFiles: 5,
     }),
   ],
 })
 
-// In non-production, also log to the console with colorized pretty output
-if (!isProd) {
-  logger.add(
-    new winston.transports.Console({
-      format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.timestamp({ format: 'HH:mm:ss' }),
-        winston.format.printf(({ timestamp, level, message, ...meta }) => {
-          const metaStr = Object.keys(meta).length && meta.service
-            ? ''
-            : ' ' + JSON.stringify(meta)
-          return `${timestamp} ${level}: ${message}${metaStr}`
-        }),
-      ),
-    }),
-  )
-}
+// Always log to the console too — containerized platforms (Render, etc.)
+// capture stdout/stderr, not files written inside the ephemeral filesystem.
+logger.add(
+  new winston.transports.Console({
+    format: isProd
+      ? winston.format.combine(winston.format.timestamp(), winston.format.json())
+      : winston.format.combine(
+          winston.format.colorize(),
+          winston.format.timestamp({ format: 'HH:mm:ss' }),
+          winston.format.printf(({ timestamp, level, message, service, ...meta }) => {
+            const metaStr = Object.keys(meta).length ? ' ' + JSON.stringify(meta) : ''
+            return `${timestamp} ${level}: ${message}${metaStr}`
+          }),
+        ),
+  }),
+)
 
 // Stream for Morgan — pipes HTTP request logs into Winston
 logger.stream = {
   write: (message) => {
-    // Morgan messages end with a newline — trim it
     logger.info(message.trim())
   },
 }
