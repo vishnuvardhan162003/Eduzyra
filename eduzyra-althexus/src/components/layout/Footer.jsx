@@ -1,7 +1,29 @@
 import { Link } from 'react-router-dom'
-import { Mail, Globe, MessageCircle, Rss } from 'lucide-react'
+import { Mail, Globe } from 'lucide-react'
 import Logo from '../common/Logo'
-import { BRAND, FOOTER_LINKS } from '../../constants/site'
+import {
+  WhatsAppIcon,
+  InstagramIcon,
+  FacebookIcon,
+  LinkedInIcon,
+  XIcon,
+  YouTubeIcon,
+} from '../common/BrandIcons'
+import { BRAND, FOOTER_LINKS, SOCIAL_LINKS } from '../../constants/site'
+
+const socialIconClass =
+  'flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-teal hover:text-teal'
+
+const SOCIALS = [
+  { href: `mailto:${SOCIAL_LINKS.officialEmail}`, label: 'Email Althexus', Icon: Mail },
+  { href: SOCIAL_LINKS.website, label: 'Althexus website', Icon: Globe },
+  { href: SOCIAL_LINKS.linkedin, label: 'Althexus on LinkedIn', Icon: LinkedInIcon },
+  { href: SOCIAL_LINKS.instagram, label: 'Althexus on Instagram', Icon: InstagramIcon },
+  { href: SOCIAL_LINKS.facebook, label: 'Althexus on Facebook', Icon: FacebookIcon },
+  { href: SOCIAL_LINKS.twitter, label: 'Althexus on X', Icon: XIcon },
+  { href: SOCIAL_LINKS.youtube, label: 'Althexus on YouTube', Icon: YouTubeIcon },
+  { href: SOCIAL_LINKS.whatsappChannel, label: 'Althexus WhatsApp channel', Icon: WhatsAppIcon },
+]
 
 export default function Footer() {
   return (
@@ -13,35 +35,19 @@ export default function Footer() {
             {BRAND.tagline} A studio of Althexus, building skill-based courses that mirror how
             teams actually work.
           </p>
-          <div className="mt-5 flex items-center gap-3">
-            <a
-              href={`mailto:${BRAND.supportEmail}`}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-teal hover:text-teal"
-              aria-label="Email Eduzyra"
-            >
-              <Mail size={15} />
-            </a>
-            <a
-              href="#"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-teal hover:text-teal"
-              aria-label="Eduzyra on LinkedIn"
-            >
-              <Globe size={15} />
-            </a>
-            <a
-              href="#"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-teal hover:text-teal"
-              aria-label="Eduzyra on Twitter"
-            >
-              <MessageCircle size={15} />
-            </a>
-            <a
-              href="#"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-teal hover:text-teal"
-              aria-label="Eduzyra on YouTube"
-            >
-              <Rss size={15} />
-            </a>
+          <div className="mt-5 flex flex-wrap items-center gap-3">
+            {SOCIALS.map(({ href, label, Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target={href.startsWith('mailto:') ? undefined : '_blank'}
+                rel={href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
+                className={socialIconClass}
+                aria-label={label}
+              >
+                <Icon size={15} />
+              </a>
+            ))}
           </div>
         </div>
 
@@ -52,10 +58,21 @@ export default function Footer() {
             </h3>
             <ul className="mt-4 flex flex-col gap-3">
               {links.map((link) => (
-                <li key={link.to}>
-                  <Link to={link.to} className="text-sm text-white/70 hover:text-teal">
-                    {link.label}
-                  </Link>
+                <li key={link.label}>
+                  {link.external ? (
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-white/70 hover:text-teal"
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link to={link.to} className="text-sm text-white/70 hover:text-teal">
+                      {link.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>

@@ -68,7 +68,7 @@ export default function About() {
               <span className="font-mono text-xs uppercase tracking-wide text-slate-400">
                 Founded
               </span>
-              <span className="font-display text-sm font-semibold">2021, as Althexus Academy</span>
+              <span className="font-display text-sm font-semibold">2026</span>
             </div>
             <div className="flex items-baseline justify-between border-t border-slate-100 pt-4">
               <span className="font-mono text-xs uppercase tracking-wide text-slate-400">

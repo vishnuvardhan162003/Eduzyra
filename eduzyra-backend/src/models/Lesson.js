@@ -9,6 +9,7 @@ import mongoose from 'mongoose'
  *
  * Types:
  *   - video      → has videoUrl (YouTube embed or direct MP4)
+ *   - live       → has scheduledAt, durationMinutes, meetingLink
  *   - quiz       → has quizQuestions array
  *   - assignment → student uploads a file via POST /:id/attachment
  *   - notes      → has notes field (plain text or markdown)
@@ -31,10 +32,13 @@ const lessonSchema = new mongoose.Schema(
     order: { type: Number, required: true },       // lesson position within its module (1-based)
     type: {
       type: String,
-      enum: ['video', 'quiz', 'assignment', 'notes'],
+      enum: ['video', 'live', 'quiz', 'assignment', 'notes'],
       required: true,
     },
     videoUrl: { type: String, default: '' },        // YouTube embed URL or direct MP4 URL
+    scheduledAt: { type: Date, default: null },      // live: when the session starts
+    durationMinutes: { type: Number, default: null }, // live: how long the session runs
+    meetingLink: { type: String, default: '' },      // live: join URL — content, not metadata (see controller)
     notes: { type: String, default: '' },           // plain text or markdown for notes-type lessons
     quizQuestions: [quizQuestionSchema],             // used when type is 'quiz'
     attachmentUrl: { type: String, default: '' },    // Cloudinary URL for downloadable PDF

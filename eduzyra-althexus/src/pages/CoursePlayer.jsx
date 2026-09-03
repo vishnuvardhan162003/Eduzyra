@@ -7,7 +7,7 @@ import { useAuth } from '../hooks/useAuth'
 import { buildLessonPlan } from '../utils/lessonPlan'
 import Spinner from '../components/common/Spinner'
 import LessonSidebar from '../components/learning/LessonSidebar'
-import VideoLesson from '../components/learning/VideoLesson'
+import LiveSessionLesson from '../components/learning/LiveSessionLesson'
 import QuizLesson from '../components/learning/QuizLesson'
 import AssignmentLesson from '../components/learning/AssignmentLesson'
 
@@ -100,8 +100,8 @@ export default function CoursePlayer() {
               <p className="eyebrow">{activeLesson.moduleTitle}</p>
               <h2 className="mt-1 font-display text-lg font-bold">{activeLesson.title}</h2>
               <div className="mt-5">
-                {activeLesson.type === 'video' && (
-                  <VideoLesson
+                {activeLesson.type === 'live' && (
+                  <LiveSessionLesson
                     lesson={activeLesson}
                     isComplete={completedIds.includes(activeLesson.id)}
                     onComplete={() => markComplete(activeLesson.id)}

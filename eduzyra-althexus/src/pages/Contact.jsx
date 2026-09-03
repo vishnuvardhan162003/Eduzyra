@@ -40,7 +40,7 @@ export default function Contact() {
             </span>
             <div>
               <p className="font-mono text-xs uppercase tracking-wide text-slate-400">Phone</p>
-              <p className="font-display text-sm font-semibold">+91 80 4567 1290</p>
+              <p className="font-display text-sm font-semibold">{BRAND.supportPhone}</p>
             </div>
           </div>
           <div className="card-surface flex items-center gap-4 p-5">
@@ -48,8 +48,9 @@ export default function Contact() {
               <MapPin size={18} />
             </span>
             <div>
-              <p className="font-mono text-xs uppercase tracking-wide text-slate-400">Studio</p>
-              <p className="font-display text-sm font-semibold">Bengaluru, India</p>
+              <p className="font-mono text-xs uppercase tracking-wide text-slate-400">Address</p>
+              <p className="font-display text-sm font-semibold">{BRAND.address}</p>
+              <p className="text-xs text-slate-400">{BRAND.addressNote}</p>
             </div>
           </div>
         </div>

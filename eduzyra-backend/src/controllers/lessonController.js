@@ -30,8 +30,8 @@ function stripCorrectAnswers(lesson) {
   return obj
 }
 
-// GET /api/lessons?courseId=:slugOrId — public list returns ONLY metadata (title, type, moduleTitle, moduleIndex, order)
-// Full content (videoUrl, notes, attachmentUrl, quizQuestions) requires enrollment via GET /:id
+// GET /api/lessons?courseId=:slugOrId — public list returns ONLY metadata (title, type, moduleTitle, moduleIndex, order, scheduledAt, durationMinutes)
+// Full content (videoUrl, meetingLink, notes, attachmentUrl, quizQuestions) requires enrollment via GET /:id
 export const getLessonsByCourse = asyncHandler(async (req, res) => {
   const { courseId } = req.query
   if (!courseId) throw new ApiError(400, 'courseId query param is required')
@@ -62,10 +62,10 @@ export const getLessonsByCourse = asyncHandler(async (req, res) => {
       .sort({ moduleIndex: 1, order: 1 })
       .lean()
   } else {
-    // Public/student sees only published metadata
+    // Public/student sees only published metadata + schedule (no videoUrl, meetingLink, notes, attachmentUrl, quizQuestions)
     lessons = await Lesson.find({ course: course._id, published: true })
       .sort({ moduleIndex: 1, order: 1 })
-      .select('title moduleTitle moduleIndex order type') // ONLY metadata — no videoUrl, notes, attachmentUrl, quizQuestions
+      .select('title moduleTitle moduleIndex order type scheduledAt durationMinutes')
       .lean()
   }
 
@@ -152,7 +152,20 @@ export const updateLesson = asyncHandler(async (req, res) => {
   }
 
   const data = req.validatedBody || req.body
-  const safeFields = ['title', 'moduleTitle', 'moduleIndex', 'order', 'type', 'videoUrl', 'notes', 'quizQuestions', 'published']
+  const safeFields = [
+    'title',
+    'moduleTitle',
+    'moduleIndex',
+    'order',
+    'type',
+    'videoUrl',
+    'scheduledAt',
+    'durationMinutes',
+    'meetingLink',
+    'notes',
+    'quizQuestions',
+    'published',
+  ]
   for (const field of safeFields) {
     if (data[field] !== undefined) lesson[field] = data[field]
   }

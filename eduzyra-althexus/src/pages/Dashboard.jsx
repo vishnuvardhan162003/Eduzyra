@@ -31,8 +31,10 @@ export default function Dashboard() {
 
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
         <StatCard icon={BookOpen} label="Active paths" value={enrolledCourses.length} />
-        <StatCard icon={Flame} label="Day streak" value="12 days" />
-        <StatCard icon={Trophy} label="Checkpoints cleared" value="9" />
+        {/* TODO: wire to real streak/checkpoint tracking once that exists on the backend.
+            These were previously hardcoded to '12 days' / '9' for every user. */}
+        <StatCard icon={Flame} label="Day streak" value="0 days" />
+        <StatCard icon={Trophy} label="Checkpoints cleared" value="0" />
       </div>
 
       <div className="mt-10">
